@@ -187,10 +187,6 @@
 	{
 		"en"		"Randomize Everyone's Classes"
 	}
-	"#Chaos_Effect_BonusDucks"
-	{
-		"en"		"Bonus Ducks!"
-	}
 	"#Chaos_Effect_Bouncy"
 	{
 		"en"		"Bouncy Castle"
@@ -296,13 +292,9 @@
 	{
 		"en"		"Extreme Fog"
 	}
-	"#Chaos_Effect_CheapObjects"
+	"#Chaos_Effect_QuickBuildings"
 	{
-		"en"		"All Buildings Cost 0 Metal"
-	}
-	"#Chaos_Effect_FastBuild"
-	{
-		"en"		"Fast Building"
+		"en"		"Free And Fast Buildings"
 	}
 	"#Chaos_Effect_10xOverhealLimit"
 	{
@@ -351,14 +343,6 @@
 	"#Chaos_Effect_TallMercs"
 	{
 		"en"		"Stretchy Mercs"
-	}
-	"#Chaos_Effect_SpawnSoccerBall"
-	{
-		"en"		"Spawn Soccer Ball"
-	}
-	"#Chaos_Effect_SpawnBeachBall"
-	{
-		"en"		"Spawn Beach Ball"
 	}
 	"#Chaos_Effect_PaintItems"
 	{
@@ -418,7 +402,7 @@
 	}
 	"#Chaos_Effect_DisableRespawnTimes"
 	{
-		"en"		"No Respawn Times"
+		"en"		"Instant Respawn"
 	}
 	"#Chaos_Effect_IncreasedSpread"
 	{
@@ -602,7 +586,7 @@
 	}
 	"#Chaos_Effect_ImmuneToPushback"
 	{
-		"en"		"All Players Are Pushback Immune"
+		"en"		"All Players Are Knockback Immune"
 	}
 	"#Chaos_Effect_Callouts"
 	{

@@ -1,24 +1,87 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-static StringMap g_hOldConVarValues;
+static StringMap g_hEffectData;
 static ConVar sv_cheats;
+
+enum struct ConVarData
+{
+	ConVar convar;
+	char value[64];
+}
+
+enum struct SetConVarEffectData
+{
+	ArrayList convars; // ArrayList<ConVarData>
+	bool replicate_cheats;
+}
 
 public bool SetConVar_Initialize(ChaosEffect effect, GameData gameconf)
 {
-	g_hOldConVarValues = new StringMap();
-	sv_cheats = FindConVar("sv_cheats");
+	if (!g_hEffectData)
+		g_hEffectData = new StringMap();
+	
+	if (!effect.data)
+		return false;
+	
+	SetConVarEffectData effectData;
+	strcopy(effectData.id, sizeof(effectData.id), effect.id);
+	effectData.convars = new ArrayList(sizeof(ConVarData));
+	
+	KeyValues kv = effect.data;
+	
+	if (kv.JumpToKey("convars", false))
+	{
+		if (kv.GotoFirstSubKey(false))
+		{
+			do
+			{
+				char szName[64];
+				if (kv.GetSectionName(szName, sizeof(szName)))
+				{
+					ConVar convar = FindConVar(szName);
+					if (convar)
+					{
+						char szValue[64];
+						kv.GetString(NULL_STRING, szValue, sizeof(szValue));
+						
+						ConVarData conVarData;
+						conVarData.convar = convar;
+						conVarData.value = szValue;
+						
+						effectData.convars.PushArray(conVarData);
+					}
+				}
+			}
+			while (kv.GotoNextKey(false));
+			kv.GoBack();
+		}
+		kv.GoBack();
+	}
+	
+	effectData.replicate_cheats = effect.data.GetNum("replicate_cheats") != 0;
+	
+	g_hEffectData.SetArray(effect.id, effectData);
 	
 	return true;
 }
 
 public bool SetConVar_OnStart(ChaosEffect effect)
 {
-	if (!effect.data)
+	SetConVarEffectData effectData;
+	if (!g_hEffectData.GetArray(effect.id, effectData, sizeof(effectData)))
 		return false;
 	
-	char szName[512];
-	effect.data.GetString("convar", szName, sizeof(szName));
+	g_hEffectData.
+	
+	for (int i=0;i<effectData.convars;i++)
+	{
+		ConVarData data;
+		if (effectData.convars.GetArray(data))
+		{
+			if (data.convar == )
+		}
+	}
 	
 	ConVar convar = FindConVar(szName);
 	if (!convar)
@@ -36,7 +99,7 @@ public bool SetConVar_OnStart(ChaosEffect effect)
 	if (StrEqual(szOldValue, szValue))
 		return false;
 	
-	g_hOldConVarValues.SetString(szName, szOldValue);
+	//g_hOldConVarValues.SetString(szName, szOldValue);
 	convar.SetString(szValue, true);
 	
 	// If this effect has no duration, we don't need the stuff below
@@ -71,13 +134,13 @@ public void SetConVar_OnEnd(ChaosEffect effect)
 {
 	char szName[512], szValue[512];
 	effect.data.GetString("convar", szName, sizeof(szName));
-	g_hOldConVarValues.GetString(szName, szValue, sizeof(szValue));
+	//g_hOldConVarValues.GetString(szName, szValue, sizeof(szValue));
 	
 	ConVar convar = FindConVar(szName);
 	
 	convar.RemoveChangeHook(OnConVarChanged);
 	convar.SetString(szValue, true);
-	g_hOldConVarValues.Remove(szName);
+	//g_hOldConVarValues.Remove(szName);
 	
 	if (effect.data.GetNum("replicate_cheats"))
 	{
@@ -109,5 +172,5 @@ static void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] n
 	convar.AddChangeHook(OnConVarChanged);
 	
 	// Update our stored value
-	g_hOldConVarValues.SetString(szName, newValue);
+	//g_hOldConVarValues.SetString(szName, newValue);
 }
