@@ -21,9 +21,7 @@ For more information on effect creation, see [here](https://github.com/Mikusch/C
 * [nosoop/SM-TFUtils](https://github.com/nosoop/SM-TFUtils)
 * [nosoop/SM-TFEconData](https://github.com/nosoop/SM-TFEconData)
 * [FortyTwoFortyTwo/VScript](https://github.com/FortyTwoFortyTwo/VScript)
-* [DoctorMcKay/MoreColors](https://github.com/DoctorMcKay/sourcemod-plugins/blob/master/scripting/include/morecolors.inc) (
-  compile
-  only)
+* [DoctorMcKay/MoreColors](https://github.com/DoctorMcKay/sourcemod-plugins/blob/master/scripting/include/morecolors.inc) (compile only)
 
 ## Special Thanks
 
