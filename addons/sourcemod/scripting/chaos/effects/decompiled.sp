@@ -21,7 +21,7 @@ static ArrayList g_hCreatedVisuals;
 static StringMap g_hEntityToSpriteMap;
 static StringMap g_hEntityToModelMap;
 
-public bool Decompiled_Initialize(ChaosEffect effect, GameData gameconf)
+public bool Decompiled_Initialize(ChaosEffect effect)
 {
 	showtriggers = FindConVar("showtriggers");
 	
@@ -33,7 +33,6 @@ public bool Decompiled_Initialize(ChaosEffect effect, GameData gameconf)
 	g_hEntityToSpriteMap.SetString("color_correction", "editor/color_correction.vmt");
 	g_hEntityToSpriteMap.SetString("env_cubemap", "editor/env_cubemap.vmt");
 	g_hEntityToSpriteMap.SetString("env_global", "editor/env_global.vmt");
-	g_hEntityToSpriteMap.SetString("env_global", "editor/obsolete.vmt");
 	g_hEntityToSpriteMap.SetString("env_explosion", "editor/env_explosion.vmt");
 	g_hEntityToSpriteMap.SetString("env_fog_controller", "editor/fog_controller.vmt");
 	g_hEntityToSpriteMap.SetString("env_shake", "editor/env_shake.vmt");
@@ -120,7 +119,7 @@ public void Decompiled_OnMapStart(ChaosEffect effect)
 		EntityLumpEntry entry = EntityLump.Get(i);
 		
 		int index = entry.FindKey("classname");
-		if (index == 1)
+		if (index == -1)
 			continue;
 		
 		char classname[64];
@@ -245,7 +244,7 @@ static void SpawnLightsFromData()
 {
 	if (g_hLightData.Length == 0)
 	{
-		LogMessage("No light data found! Restart the map to allow OnMapInit to parse light entities.");
+		LogMessage("No light data found! Restart the map to allow OnMapStart to parse light entities.");
 		return;
 	}
 	
@@ -369,37 +368,16 @@ static int CreateModel(const char[] szModel, const float vecOrigin[3], const flo
 	return -1;
 }
 
-static int GetCurrentEntities()
-{
-	int nCurrentEntities = 0;
-	
-	int entity = -1;
-	while ((entity = FindEntityByClassname(entity, "*")) != -1)
-	{
-		nCurrentEntities++;
-	}
-	
-	return nCurrentEntities;
-}
-
 static bool ShouldSpawnVisual()
 {
 	// Don't spawn more entities if we're already near the limit
-	return float(GetCurrentEntities()) / float(GetMaxEntities()) < 0.95;
+	return float(GetNumEdicts()) / float(GetMaxEntities()) < 0.9;
 }
 
 static void ShowTriggers_Toggle()
 {
-	for (int client = 1; client <= MaxClients; client++)
-	{
-		if (!IsClientInGame(client))
-			continue;
-		
-		// We can't use ServerCommand because it is delayed by a frame
-		SetCommandFlags("showtriggers_toggle", GetCommandFlags("showtriggers_toggle") & ~FCVAR_CHEAT);
-		FakeClientCommand(client, "showtriggers_toggle");
-		SetCommandFlags("showtriggers_toggle", GetCommandFlags("showtriggers_toggle") | FCVAR_CHEAT);
-		
-		break;
-	}
+	SetCommandFlags("showtriggers_toggle", GetCommandFlags("showtriggers_toggle") & ~FCVAR_CHEAT);
+	ServerCommand("showtriggers_toggle");
+	ServerExecute();
+	SetCommandFlags("showtriggers_toggle", GetCommandFlags("showtriggers_toggle") | FCVAR_CHEAT);
 }
